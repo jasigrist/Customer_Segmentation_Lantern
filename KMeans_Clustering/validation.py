@@ -66,6 +66,8 @@ def validation(train_data):
     #plt.savefig(rf'C:\Desktop\plots\\normalized\Davies_Score_{season}_{days}.png')
     plt.show()
 
+    print(min(df_scores['davies_bouldin_score']))
+
 # %%
 
 

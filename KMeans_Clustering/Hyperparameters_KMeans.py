@@ -19,7 +19,7 @@ def optimize_kmeans(train_data):
     X = train_data.squeeze()  # adjust shape if needed
 
     param_grid = {
-        'n_clusters': np.arange(2, 11, 1), 
+        'n_clusters': np.arange(3, 11, 1), 
         #'init': ['k-means++', 'random'],
         'init': ['k-means++'],
         'n_init': np.arange(1, 6, 1), 

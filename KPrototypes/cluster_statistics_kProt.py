@@ -30,7 +30,7 @@ def plot_cluster_percentiles(train_data, clusters_train, n_clusters, building_ty
     legend_labels = []
 
     # Subplots von oben nach unten: Cluster 1 ist ganz oben
-    for subplot_idx, cluster_idx in enumerate(reversed(range(n_clusters))):
+    for subplot_idx, cluster_idx in enumerate((range(n_clusters))):
         ax = axes[subplot_idx]
         cluster_idx_real = cluster_idx + 1
         cluster_data = train_data[clusters_train == cluster_idx_real]
@@ -78,7 +78,7 @@ def plot_cluster_percentiles(train_data, clusters_train, n_clusters, building_ty
                              f'{lower_shade_percentile}th - {upper_shade_percentile}th Percentile',
                              f'{mid_shade_percentile}th - {top_shade_percentile}th Percentile']
 
-        ax.set_title(f"Cluster {cluster_idx_real}", loc='center', fontsize=14, fontweight='bold', color='gray')
+        ax.set_title(f"Cluster {cluster_idx_real}", loc='center', fontsize=14, fontweight='bold', color='black')
         ax.set_ylim(0, 1)
         ax.set_yticks(np.linspace(0, 1, 6))
         ax.tick_params(axis='both', which='major', labelsize=10)
@@ -103,7 +103,7 @@ def plot_cluster_percentiles(train_data, clusters_train, n_clusters, building_ty
 
     plt.tight_layout(rect=[0.06, 0, 0.99, 0.90])  # Weniger Rand links/rechts und unter dem Titel
 
-    plt.savefig(f'/Users/jansigrist/Documents/SP/Customer_Segmentation_Lantern/Results/Plots/Cluster/HourlyAveraged_percentiles_KProt_separate_subplots_final_{building_type}.png',
+    plt.savefig(f'/Users/jansigrist/Documents/SP/Customer_Segmentation_Lantern/Results/Plots/Cluster/HourlyAveraged_percentiles_KProt_{building_type}.png',
                 bbox_inches='tight')
     plt.show()
 

@@ -1,5 +1,4 @@
 # %% [markdown]
-# # Generating Weekday and Weekend profiles
 
 # %%
 import polars as pl
@@ -12,61 +11,41 @@ from sklearn.cluster import KMeans
 
 
 # %%
-def validation(train_data):
-
-
+def validation_kMeans(train_data1, train_data2):
     seed_random = 42
-
-    fitted_kmeans = {}
-    labels_kmeans = {}
-    df_scores = []
-    k_values_to_try = np.arange(2,26)
-    train_data = train_data.reshape((train_data.shape[0], train_data.shape[1]))
-
-    #fig, ax = plt.subplots(12, 2, figsize=(15,8))
-    for n_clusters in k_values_to_try:
-        #Perform clustering.
-        kmeans = KMeans(n_clusters=n_clusters,
-                        random_state=seed_random,
-                        )
-        labels_clusters = kmeans.fit_predict(train_data)
-        q, mod = divmod(n_clusters, 2)
+    k_values_to_try = np.arange(2, 11)
     
-        #Insert fitted model and calculated cluster labels in dictionaries,
-        #for further reference.
-        fitted_kmeans[n_clusters] = kmeans
-        labels_kmeans[n_clusters] = labels_clusters
+    def compute_scores(train_data):
+        train_data = train_data.reshape((train_data.shape[0], train_data.shape[1]))
+        df_scores = []
+        for n_clusters in k_values_to_try:
+            kmeans = KMeans(n_clusters=n_clusters, random_state=seed_random)
+            labels_clusters = kmeans.fit_predict(train_data)
+            
+            sh = silhouette_score(train_data, labels_clusters)
+            df_scores.append({"no_of_clusters": n_clusters, "silhouette_score": sh})
+        df_scores = pl.DataFrame(df_scores)
+        return df_scores
     
-        #Calculate various scores, and save them for further reference.
-        silhouette = silhouette_score(train_data, labels_clusters)
-        ch = calinski_harabasz_score(train_data, labels_clusters)
-        db = davies_bouldin_score(train_data, labels_clusters)
-        tmp_scores = {"no_of_clusters": n_clusters,
-                    "silhouette_score": silhouette,
-                    "calinski_harabasz_score": ch,
-                    "davies_bouldin_score": db
-                    }
-        df_scores.append(tmp_scores)
-    
-    #Create a DataFrame of clustering scores, using `n_clusters` as index, for easier plotting.
-    df_scores = pl.DataFrame(df_scores)
-    #df_scores.set_index("no_of_clusters", inplace=True)
+    df_scores1 = compute_scores(train_data1)
+    df_scores2 = compute_scores(train_data2)
 
-    plt.figure(figsize=(6, 4))
-    #plt.plot(df_scores['no_of_clusters'][:25],df_scores['silhouette_score'][:25],label="silhouette_score", marker ='o', color='orange')
-    plt.plot(df_scores['no_of_clusters'],df_scores['davies_bouldin_score'],label= "Davies_Bouldin_score", marker = 'o', color='black')
-    #plt.plot(df_scores['no_of_clusters'],df_scores['calinski_harabasz_score'],label= "calinski_harabasz_score", marker = 'o')
-    plt.title(f"Davies Boulding Score vs Number of clusters")
-    plt.xlabel('Number of Clusters (k)')
-    plt.ylabel('Score [-]')
-    #plt.xticks(k_values_to_try)
-    plt.ylim(0.0,3)
-    plt.legend(loc='upper right') 
+    plt.figure(figsize=(8, 5))
+    plt.plot(df_scores1['no_of_clusters'], df_scores1['silhouette_score'], marker='o', color='#1f77b4', label='Flats')
+    plt.plot(df_scores2['no_of_clusters'], df_scores2['silhouette_score'], marker='s', color='#ff7f0e', label='Houses')
+    plt.title("Silhouette Score vs Number of Clusters")
+    plt.xlabel("Number of Clusters (k)")
+    plt.ylabel("Silhouette Score")
+    plt.ylim(0.0, 1)
+    plt.legend()
     plt.grid(False)
-    #plt.savefig(rf'C:\Desktop\plots\\normalized\Davies_Score_{season}_{days}.png')
+    plt.savefig("/Users/jansigrist/Documents/SP/Customer_Segmentation_Lantern/Results/Plots/Cluster/KMeans_Silhouette.png", bbox_inches='tight')
     plt.show()
-
-    print(min(df_scores['davies_bouldin_score']))
+    
+    print(f"Minimum Silhouette Score Dataset 1: {max(df_scores1['silhouette_score'])}")
+    print(f"Minimum Silhouette Score Dataset 2: {max(df_scores2['silhouette_score'])}")
+    
+    return df_scores1, df_scores2
 
 # %%
 

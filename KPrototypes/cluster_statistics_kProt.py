@@ -5,7 +5,7 @@ import polars as pl
 
 
 
-def plot_cluster_percentiles(train_data, clusters_train, n_clusters, building_type):
+def plot_cluster_percentiles(train_data, clusters_train, n_clusters, building_type, dataset):
     import numpy as np
     import matplotlib.pyplot as plt
     import polars as pl
@@ -103,7 +103,7 @@ def plot_cluster_percentiles(train_data, clusters_train, n_clusters, building_ty
 
     plt.tight_layout(rect=[0.06, 0, 0.99, 0.90])  # Weniger Rand links/rechts und unter dem Titel
 
-    plt.savefig(f'/Users/jansigrist/Documents/SP/Customer_Segmentation_Lantern/Results/Plots/Cluster/HourlyAveraged_percentiles_KProt_{building_type}.png',
+    plt.savefig(f'/Users/jansigrist/Documents/SP/Customer_Segmentation_Lantern/Results/{dataset}/Plots/Cluster/HourlyAveraged_percentiles_KProt_{building_type}.png',
                 bbox_inches='tight')
     plt.show()
 

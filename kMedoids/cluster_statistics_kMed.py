@@ -5,7 +5,7 @@ import polars as pl
 
 
 
-def plot_cluster_percentiles(train_data, clusters_train, n_clusters, building_type, dataset):
+def plot_cluster_percentiles(train_data, clusters_train, n_clusters, building_type, dataset, categorical_features):
     import numpy as np
     import matplotlib.pyplot as plt
     import polars as pl
@@ -92,18 +92,18 @@ def plot_cluster_percentiles(train_data, clusters_train, n_clusters, building_ty
             ax.set_xlim(1, 96)
     
     # Gemeinsamer Title für alle Subplots
-    fig.suptitle("Statistical Description of Clustered Consumption Patterns", fontsize=20, fontweight='bold', color='black', y=0.96)
+    fig.suptitle("Statistical Description of Clustered Consumption Patterns", fontsize=20, color='black', y=0.96)
 
     # Gemeinsame Legende direkt unter dem Titel, zentriert
     fig.legend(legend_handles, legend_labels, loc='upper center', bbox_to_anchor=(0.5, 0.915),
                ncol=5, fontsize='large', frameon=False)
     
     # Gemeinsames Y-Label nur einmal für alle
-    fig.text(0.04, 0.5, "Normalized Energy Consumption", va='center', rotation='vertical', fontsize=16, fontweight='bold')
+    fig.text(0.04, 0.5, f"Normalized Energy Consumption - {building_type.capitalize()}s", va='center', rotation='vertical', fontsize=16)
 
     plt.tight_layout(rect=[0.06, 0, 0.99, 0.90])  # Weniger Rand links/rechts und unter dem Titel
 
-    plt.savefig(f'/Users/jansigrist/Documents/SP/Customer_Segmentation_Lantern/Results/{dataset}/Plots/Cluster/HourlyAveraged_percentiles_KMed_{building_type}.png',
+    plt.savefig(f'/Users/jansigrist/Documents/SP/Customer_Segmentation_Lantern/Results/{dataset}/Plots/Cluster/HourlyAveraged_percentiles_KMed_{building_type}_{categorical_features}.png',
                 bbox_inches='tight')
     plt.show()
 

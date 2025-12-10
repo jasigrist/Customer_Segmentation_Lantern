@@ -6,7 +6,6 @@ import polars as pl
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import silhouette_score
-from sklearn.metrics import davies_bouldin_score, calinski_harabasz_score
 from sklearn.cluster import KMeans
 
 

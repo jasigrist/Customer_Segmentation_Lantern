@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import polars as pl
 
-def plot_cluster_percentiles(train_data, clusters_train, n_clusters, building_type, dataset, categorical_features):
+def plot_cluster_percentiles(train_data, clusters_train, n_clusters, building_type, dataset, method, categorical_features):
     """
     Visualize statistical summaries of k-medoids clusters using multiple percentiles.
     
@@ -134,7 +134,7 @@ def plot_cluster_percentiles(train_data, clusters_train, n_clusters, building_ty
 
     plt.tight_layout(rect=[0.06, 0, 0.99, 0.90])
 
-    plt.savefig(f'/Users/jansigrist/Documents/SP/Customer_Segmentation_Lantern/Results/{dataset}/Plots/Cluster/HourlyAveraged_percentiles_KMed_{building_type}_{categorical_features}.png',
+    plt.savefig(f'/Users/jansigrist/Documents/SP/Customer_Segmentation_Lantern/Results/{dataset}/Plots/Cluster/HourlyAveraged_percentiles_{method}_{building_type}_{categorical_features}.png',
                 bbox_inches='tight')
     plt.show()
 

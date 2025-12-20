@@ -26,23 +26,10 @@ logging.getLogger('matplotlib.font_manager').disabled = True
 # - n_init: 1-5 (multiple random initializations per config)
 # - max_iter: 100,200,300,400,500 (convergence control)
 # Skips configs producing single cluster (invalid silhouette/DB scores)
-# Ranks by Davies-Bouldin score (lower=better cluster separation)
+# Ranks by Silhouette score (higher=better cluster separation)
 
 def optimize_kmeans(train_data):
-    """
-    Grid search k-means hyperparameters on normalized load profiles.
-    
-    Parameters
-    ----------
-    train_data : np.ndarray
-        Shape (n_households, 96) or (n_households, 96, 1); normalized daily profiles
-        
-    Returns
-    -------
-    dict
-        Best hyperparameters: {'n_clusters', 'init', 'n_init', 'max_iter', 
-                              'silhouette_score', 'db_score'}
-    """
+    """ Optimize KMeans hyperparameters via grid search."""
 
     X = train_data.squeeze()  # adjust shape if needed
 
@@ -87,12 +74,12 @@ def optimize_kmeans(train_data):
             })
 
     # Rank configurations by Davies-Bouldin (ascending=better)
-    results_df = pd.DataFrame(results).sort_values(by='db_score', ascending=True)
+    results_df = pd.DataFrame(results).sort_values(by='silhouette_score', ascending=False)
 
     # Uncomment to inspect full ranking:    
     #print(results_df)
 
-    # Output best combination (lowest db_score)
+    # Output best combination (highest silhouette_score)
     best_result = results_df.iloc[0]
     print("\nBest combination of hyperparameters:")
     print(best_result)

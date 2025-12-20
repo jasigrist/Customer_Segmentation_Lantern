@@ -10,7 +10,9 @@ from sklearn.cluster import KMeans
 
 
 # %%
-def validation_kMeans(train_data1, train_data2, dataset, building_type):
+
+def validation_kMeans(main_path, train_data1, train_data2, dataset, building_type):
+    """ Validate KMeans clustering via Silhouette scores over varying k."""
     seed_random = 42
     k_values_to_try = np.arange(2, 11)
 
@@ -48,7 +50,7 @@ def validation_kMeans(train_data1, train_data2, dataset, building_type):
     plt.ylim(0.0, 1)
     plt.legend()
     plt.grid(False)
-    plt.savefig(f"/Users/jansigrist/Documents/SP/Customer_Segmentation_Lantern/Results/{dataset}/Plots/Cluster/KMeans_Silhouette_{building_type}.png", bbox_inches='tight')
+    plt.savefig(f"{main_path}/Results/{dataset}/Plots/Cluster/KMeans_Silhouette_{building_type}.png", bbox_inches='tight')
     plt.show()
     
     return df_scores1, df_scores2

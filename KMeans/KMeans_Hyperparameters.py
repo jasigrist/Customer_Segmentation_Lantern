@@ -1,39 +1,40 @@
 # =============================================================================
 # K-MEANS HYPERPARAMETER OPTIMIZATION FOR LOAD PROFILE CLUSTERING
 # =============================================================================
-# Purpose: Grid search over k-means hyperparameters using silhouette + Davies-Bouldin scores
+# Purpose: Grid search over k-means hyperparameters using silhouette scores
 # Input: Normalized daily load profiles (n_households × 96 timepoints)
-# Output: Optimal {n_clusters, n_init, max_iter} minimizing Davies-Bouldin score
+# Output: Optimal {n_clusters, n_init, max_iter} maximizing Silhouette score
 # Metrics: Silhouette (cluster cohesion/separation), DB (cluster similarity)
-# Search space: k=3-10, n_init=1-5, max_iter=100-500 → 40 combinations
+# Search space: k=3-10, n_init=1-5, max_iter=100-500
 # =============================================================================
 
 import numpy as np
 import itertools
-import logging
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score, davies_bouldin_score
 import pandas as pd
 
-logging.getLogger('matplotlib.font_manager').disabled = True
 
-# =============================================================================
-# HYPERPARAMETER GRID SEARCH: Exhaustive evaluation of k-means configurations
-# =============================================================================
-# Tests all combinations of:
-# - n_clusters: 3-10 (avoids k=1,2; typical for customer segmentation)
-# - init: 'k-means++' (commented: 'random' for comparison)
-# - n_init: 1-5 (multiple random initializations per config)
-# - max_iter: 100,200,300,400,500 (convergence control)
-# Skips configs producing single cluster (invalid silhouette/DB scores)
-# Ranks by Silhouette score (higher=better cluster separation)
 
 def optimize_kmeans(train_data):
-    """ Optimize KMeans hyperparameters via grid search."""
+    """
+    Optimize K-Means hyperparameters via exhaustive grid search.
+    
+    Parameters
+    ----------
+    train_data : array-like, shape (n_samples, n_features)
+        Normalized load profiles (hourly consumption patterns).
+    
+    Returns
+    -------
+    best_result : pandas.Series
+        Dictionary-like object containing optimal hyperparameters and their 
+        corresponding Silhouette and Davies-Bouldin scores.
+    """
 
-    X = train_data.squeeze()  # adjust shape if needed
+    X = train_data.squeeze()  # Shape: (n_samples, n_features)
 
-    # Define hyperparameter grid (40 combinations total)
+    # Define hyperparameter grid to search
     param_grid = {
         'n_clusters': np.arange(3, 11, 1), 
         'init': ['k-means++'],
@@ -43,7 +44,7 @@ def optimize_kmeans(train_data):
 
     results = []
 
-    # Exhaustive grid search: 8×1×5×5 = 40 configurations
+    # Exhaustive grid search
     for n_clusters, init, n_init, max_iter in itertools.product(
         param_grid['n_clusters'],
         param_grid['init'],
@@ -58,7 +59,7 @@ def optimize_kmeans(train_data):
             random_state=42
         )
 
-        # Fit and predict cluster labels
+        # Fit model and obtain cluster assignments
         labels = kmeans.fit_predict(X)
 
         if len(set(labels)) > 1:
@@ -73,7 +74,7 @@ def optimize_kmeans(train_data):
                 'db_score': db_score
             })
 
-    # Rank configurations by Davies-Bouldin (ascending=better)
+    # Rank configurations by Silhouette score
     results_df = pd.DataFrame(results).sort_values(by='silhouette_score', ascending=False)
 
     # Uncomment to inspect full ranking:    

@@ -13,27 +13,38 @@ import polars as pl
 
 def plot_cluster_percentiles(project_root,train_data, clusters_train, n_clusters, building_type, dataset, method, categorical_features):
     """
-    Visualize statistical summaries of k-medoids clusters using multiple percentiles.
+    Visualize statistical summaries of obtained clusters using nested percentile bands.
+    
+    Generates multi-panel subplot figure with percentile shading, mean, and median lines
+    for each cluster. Useful for understanding consumption pattern variability and
+    identifying outliers within clusters.
+
+    Adapted from Anmol Panda (2024): "Customer Segmentation Assisted Demand Flexibility 
+    Provision in Swiss Households" (Master's thesis).
     
     Parameters
     ----------
+    project_root : str
+        Root directory path for saving outputs.
     train_data : np.ndarray
-        Shape (n_households, 96); normalized daily load profiles
+        Shape (n_households, 96); normalized daily load profiles (15-min resolution).
     clusters_train : np.ndarray  
-        Cluster labels (0-indexed: 0,1,2,...); length n_households
+        Cluster labels (1-indexed: 1, 2, ..., n_clusters); length n_households.
     n_clusters : int
-        Number of clusters (determines subplot rows)
+        Number of clusters (determines number of subplots).
     building_type : str
-        'house', 'flat', etc. (for filename and y-label)
+        Building type ('flat', 'house') for labeling and filename.
     dataset : str
-        'GroupE', 'SWW' (for filename)
+        Dataset identifier ('SWW', 'GroupE') for file path.
+    method : str
+        Clustering method ('KMed', 'KMeans', 'KProt') for filename.
     categorical_features : str
-        'technical', 'sociodemographic' (for filename)
+        Feature type ('technical', 'sociodemographic') for filename.
         
     Returns
     -------
-    pl.DataFrame
-        2×n_clusters table: lower_percentile_cluster_X, upper_percentile_cluster_X
+    None
+        Saves figure to disk; optionally returns Polars DataFrame of percentiles.
     """
 
     # =============================================================================
@@ -138,4 +149,5 @@ def plot_cluster_percentiles(project_root,train_data, clusters_train, n_clusters
                 bbox_inches='tight')
     plt.show()
 
+    # Uncomment to return percentiles as Polars DataFrame
     #cluster_percentiles_df = pl.DataFrame(lower_percentile_columns + upper_percentile_columns)

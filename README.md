@@ -1,6 +1,6 @@
 Customer_Segmentation_Lantern
 
-This repository is based on smart meter and survey data provided by the Swiss Energy Transition (SWEET) research consortium (see https://sweet-lantern.ch/). The framework was developed as part of a semester project at the Urban Energy Systems Laboratory at Empa Dübendorf to investigate different customer segments.
+This repository is based on smart meter and survey data provided by the Lantern consortium, which is funded by the Swiss Federal Office of Energy’s SWEET programme (see https://sweet-lantern.ch/). The framework was developed as part of a semester project at the Urban Energy Systems Laboratory at Empa Dübendorf to investigate different customer segments.
 
 The repository contains a Jupyter‑notebook–based framework for customer segmentation using smart meter and survey data. The framework was originally developed for the “SWW” dataset and subsequently extended to support the “GroupE” dataset.
 
